@@ -1,0 +1,6 @@
+interface:
+  display_name: "Sketch Implement Design"
+  short_description: "Implement Sketch designs via MCP context"
+  default_prompt: >
+    Use $sketch-implement-design to implement the selected Sketch design in this
+    codebase, matching layout, responsive behavior, and 1:1 visual fidelity.
