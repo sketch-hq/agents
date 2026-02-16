@@ -1,5 +1,7 @@
 # Sketch Agent Skills
-Sketch Agent Skills are folders of instructions, scripts, and resources that AI agents can discover and use to perform at specific tasks in Sketch.
+Sketch Agent Skills are folders of instructions, scripts, and resources that AI agents can use to discover and perform tasks in Sketch documents.
+
+These skills teach agents how to complete specific tasks in a repeatable way, whether that's creating documents with your company's brand guidelines, analyzing data using your organization's specific workflows, or automating personal tasks.
 
 Sketch currently provides the following skill:
 
