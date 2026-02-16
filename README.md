@@ -1,9 +1,11 @@
 # Sketch Agent Skills
-Sketch Agent Skills are folders of instructions, scripts, and resources that AI agents can discover and use to perform at specific tasks in Sketch.
+Sketch Agent Skills are folders of instructions, scripts, and resources that AI agents can discover and use to perform specific tasks in Sketch documents in a repeatable way.
+
+We currently provide one skill — [Sketch Implement Design](https://github.com/sketch-hq/skills/tree/main/skills/sketch-implement-design).
 
 ## Installing a skill
 
-Sketch Skills are installed placing a copy of the skill's directory in the agent's `skills` folder, typically `.agents/skills/`.
+You can install Sketch Agent Skills by placing a copy of the skill's directory in the agent's `skills` folder, typically `.agents/skills/`.
 
 ### Codex
 
@@ -17,4 +19,4 @@ After installing a skill, restart the agent to pick up new skills.
 
 ## License
 
-The license of an individual skill can be found directly inside the skill's directory inside the LICENSE.txt file.
+You can find licenses for individual skills directly inside the skill's directory inside the LICENSE.txt file.
