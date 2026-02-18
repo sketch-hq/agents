@@ -6,3 +6,11 @@ interface:
   default_prompt: >
     Use $sketch-implement-design to implement the selected Sketch design in this
     codebase, matching layout, responsive behavior, and 1:1 visual fidelity.
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "sketch"
+      description: "Sketch MCP server"
+      transport: "streamable_http"
+      url: "http://localhost:31126/mcp"
