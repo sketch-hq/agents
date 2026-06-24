@@ -1,0 +1,36 @@
+{
+  "name": "sketch",
+  "version": "3.0.0",
+  "description": "Sketch plugin",
+  "author": {
+    "name": "Sketch B.V.",
+    "url": "https://sketch.com"
+  },
+  "homepage": "https://sketch.com",
+  "logo": "./assets/icon.svg",
+  "repository": "https://github.com/sketch-hq/agents",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Sketch",
+    "shortDescription": "Explore, generate, export, and do more with Sketch designs.",
+    "longDescription": "Integrate Sketch with your workflows. Includes the Sketch MCP server and skills to explore and organize documents, generate code from designs, create designs from code, and more.",
+    "developerName": "Sketch B.V.",
+    "category": "Creativity",
+    "capabilities": [
+      "read",
+      "write"
+    ],
+    "websiteURL": "https://sketch.com",
+    "privacyPolicyURL": "https://sketch.com/privacy",
+    "termsOfServiceURL": "https://sketch.com/tos",
+    "composerIcon": "./assets/composer-icon.svg",
+    "logo": "./assets/icon.svg",
+    "brandColor": "#555DFF",
+    "defaultPrompt": [
+      "Export all icons in my Sketch design as SVGs",
+      "Fill placeholders in my Sketch design with realistic data",
+      "Implement my Sketch design in React"
+    ]
+  }
+}

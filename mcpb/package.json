@@ -1,0 +1,28 @@
+{
+  "name": "sketch-mcp",
+  "version": "3.0.0",
+  "description": "Exposes MCP tools for inspection, analysis, and modification of Sketch documents.",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "pack": "mcpb pack . sketch.mcpb && mcpb clean sketch.mcpb"
+  },
+  "keywords": [
+    "mcp",
+    "sketch"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@anthropic-ai/mcpb": "^2.1.2",
+    "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.28.0"
+  },
+  "overrides": {
+    "tmp": "^0.2.6"
+  }
+}
