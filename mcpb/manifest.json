@@ -1,0 +1,35 @@
+{
+  "manifest_version": "0.3",
+  "name": "sketch-mcp",
+  "display_name": "Sketch",
+  "version": "3.0.0",
+  "description": "Connect to Sketch's local MCP server to explore your designs, organize your documents, generate code, export assets, and more.",
+  "long_description": "With Sketch's MCP server, you can explore, edit and export your designs with Claude.\n\nYou can:\n•  Explore designs and Libraries — compare code to components to Sketch and fix inconsistencies\n•  Expand and iterate on existing designs — try out new directions, generate alternative flows, and more\n•  Replace placeholders with lifelike data, or even pull from real data sets\n•  Organize and export assets\n•  Generate screens and components as code\n•  …and much more.\n\nTo get started:\n1. Make sure Sketch is running\n2. Open a document\n3. In Sketch, choose MCP > Start MCP Server, or enable Settings > General > Allow AI tools to interact with open documents\n\nThe Sketch MCP server is built in to the Sketch Mac app and runs locally on your device with any open document.",
+  "author": {
+    "name": "Sketch B.V.",
+    "url": "https://sketch.com"
+  },
+  "homepage": "https://sketch.com",
+  "documentation": "https://www.sketch.com/docs/mcp-server/",
+  "support": "https://www.sketch.com/support/",
+  "privacy_policies": ["https://www.sketch.com/privacy/"],
+  "icon": "assets/sketch.png",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {}
+    }
+  },
+  "tools_generated": true,
+  "keywords": ["mcp", "sketch"],
+  "license": "MIT",
+  "compatibility": {
+    "platforms": ["darwin"],
+    "runtimes": {
+      "node": ">=22.0.0"
+    }
+  }
+}
