@@ -2,51 +2,11 @@
 
 Multi-agent plugin bundle for **Cursor**, **Codex**, **Claude Code**, and **GitHub Copilot**. It includes the Claude MCPB connector package in `mcpb/`.
 
-> The Sketch plugin is still being published to official agent marketplaces. If it is not listed yet for your agent, use the manual MCP and skills setup below.
-
----
-
-## Install the plugin
-
-Install **Sketch** from each agent’s official plugin marketplace when it is listed.
-
-### Cursor
-
-**App:** Open **Cursor Settings → Plugins**, search for **Sketch**, or browse the [Cursor Marketplace](https://cursor.com/marketplace). In Agent chat: `/add-plugin sketch`.
-
-**CLI:** Not supported — Cursor has no terminal plugin install command.
-
-Docs: [Cursor plugins](https://cursor.com/docs/plugins)
-
-### Codex
-
-**App:** Open the **Codex** app → **Plugins** → find **Sketch** in the curated directory → **Add to Codex**. Start a new thread after installing.
-
-**CLI:** Run `codex`, type `/plugins`, open **Sketch**, choose **Install plugin**. Or run `codex plugin add sketch@<marketplace>` once the plugin is listed (use `codex plugin list` to confirm the marketplace name).
-
-Docs: [Codex plugins](https://developers.openai.com/codex/plugins)
-
-### Claude Code
-
-**App:** Run `/plugin`, open **Discover**, and install **Sketch**. Or browse [claude.com/plugins](https://claude.com/plugins).
-
-**CLI:** `claude plugin install sketch@claude-plugins-official` (in Claude Code: `/plugin install sketch@claude-plugins-official`, then `/reload-plugins`).
-
-Docs: [Discover and install plugins](https://code.claude.com/docs/en/discover-plugins)
-
-### GitHub Copilot
-
-**App (VS Code):** Enable agent plugins (`chat.plugins.enabled`), open **Extensions → Agent Plugins**, and install **Sketch** from the marketplace. Reload the window after installing.
-
-**CLI:** `copilot plugin install sketch@copilot-plugins` (interactive session: `/plugin install sketch@copilot-plugins`).
-
-Docs: [Finding and installing Copilot CLI plugins](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/plugins-finding-installing), [Agent plugins in VS Code](https://code.visualstudio.com/docs/agent-customization/agent-plugins)
+> The Sketch plugin is coming soon to official agent marketplaces. If it is not listed below for your agent, follow the manual MCP and skills setup instructions instead.
 
 ---
 
 ## Manual MCP and skills setup
-
-Use this if you do not install the full plugin bundle.
 
 ### MCP server
 
