@@ -1,0 +1,31 @@
+# Tags each plugin version on main, so installs can pin a release (for example `@v3.0.1`).
+name: Tag version
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+# Runs one at a time, so back-to-back pushes can't both try to create the same tag.
+concurrency:
+  group: tag-release
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Tag the plugin version
+        run: |
+          tag="v$(jq -r .version .claude-plugin/plugin.json)"
+          if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null; then
+            echo "${tag} already exists."
+            exit 0
+          fi
+          git tag "${tag}"
+          git push origin "refs/tags/${tag}"
+          echo "Tagged ${tag}."
