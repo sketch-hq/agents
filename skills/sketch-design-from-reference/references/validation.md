@@ -18,7 +18,7 @@ Before the first layout mutation:
 
 Keep the reference screenshot and fidelity spec available for every comparison pass. Do not rely on what you remember from earlier in the session.
 
-## Screenshot loop (every batch)
+## Canvas check loop (every batch)
 
 Follow `get_guide` with `topic: "mcp"` → Visual Verification & Completion.
 
@@ -26,14 +26,14 @@ Follow `get_guide` with `topic: "mcp"` → Visual Verification & Completion.
 2. Compare visually against the reference anchor — not against your mental model of the page.
 3. List deltas using the taxonomy below. Be specific (region, layer role, property, expected vs actual).
 4. Fix the largest structural or content mismatch first, then spacing, then typography/color, then asset polish.
-5. Screenshot again after each meaningful batch.
+5. Run another canvas check after each meaningful batch.
 6. Do not start the next top-level region until the current region passes the region gate (below).
 
 ## Region gate
 
 Work top-to-bottom through the fidelity spec regions. For each region:
 
-1. Screenshot the Sketch frame (or crop mentally to that band).
+1. Run a canvas check on the Sketch frame (or crop mentally to that band).
 2. Compare that band to the reference at the same vertical slice.
 3. Check:
    - Region exists and is in the correct order.
@@ -69,7 +69,7 @@ Fix in priority order: missing region → wrong structure/order → missing/wron
 
 Do not hand off early. Before claiming the task is complete, all of the following must be true:
 
-1. Full-frame Sketch screenshot was compared to the reference anchor at matching width.
+1. A full-frame canvas check was compared to the reference anchor at matching width.
 2. Every region in the fidelity spec was checked with the region gate.
 3. No major deltas remain:
    - No missing top-level regions or primary content blocks.
@@ -86,7 +86,7 @@ If major deltas remain, keep iterating with targeted fixes (Step 7). Do not stop
 - Region structure matches the reference: same parent/sibling relationships where practical.
 - Top-level full-bleed vs in-column behavior is correct.
 - Text content is complete, verbatim where visible, and in reading order.
-- Shared styles/swatches match source tokens or sampled colors — not guessed grays and blues.
+- Shared styles and Color Variables match source tokens or sampled colors — not guessed grays and blues.
 - Repeated UI uses symbols/instances when appropriate.
 - Assets are real imported/exported assets, not placeholders, once geometry is stable.
 
@@ -100,17 +100,17 @@ If the Sketch output looks unlike the reference:
 4. List deltas by region using the taxonomy above.
 5. Deep-dive the worst region with `get_layer_tree_summary` or a targeted probe.
 6. Fix one category at a time (structure, then copy, then spacing, etc.) with small `run_code` edits.
-7. Re-screenshot and re-run the region gate for affected bands.
+7. Run another canvas check and re-run the region gate for affected bands.
 8. If you catch yourself improvising layout or copy, stop and re-extract from the reference.
 
 ## Handoff
 
 In the final response, state:
 
-- Target frame/artboard name and ID.
+- Target Frame or Graphic name and ID.
 - Reference anchor width and source (URL, attachment, code preview).
 - Symbols used or created.
-- Tokens/swatches/shared styles used or created.
+- Tokens, Color Variables, and shared styles used or created.
 - Regions that passed the region gate.
 - Remaining major deltas (should be none) and minor deltas (listed honestly).
-- What was verified by side-by-side screenshot comparison vs what was only checked structurally.
+- What was verified by side-by-side canvas checks vs what was only checked structurally.

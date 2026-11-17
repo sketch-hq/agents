@@ -77,7 +77,7 @@ Incomplete specs cause guessed layouts. If extraction is thin, spend more time o
 
 ## Token hints
 
-Map source tokens to Sketch swatches/shared styles where possible:
+Map source tokens to Sketch Color Variables (`document.swatches`) and shared styles where possible:
 
 - `colors.border.*` → borders and input outlines.
 - `colors.background.*` → page and surface fills.

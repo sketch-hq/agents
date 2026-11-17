@@ -2,9 +2,9 @@
 
 Use this reference when comparing generated code to the Sketch design.
 
-## Screenshot loop
+## Canvas check loop
 
-Start with `get_guide` with `topic: "mcp"` for screenshot capture and generic visual verification. For Sketch content checks, also use `get_guide` with `topic: "use"`.
+Start with `get_guide` with `topic: "mcp"` for canvas checks and generic visual verification. For Sketch content checks, also use `get_guide` with `topic: "use"`.
 
 For web targets:
 
@@ -12,7 +12,7 @@ For web targets:
 2. Capture the running UI in the browser.
 3. Compare it with `get_screenshot` for the same frame.
 4. Fix the largest visible mismatch first.
-5. Re-screenshot after targeted fixes.
+5. Re-run the canvas check after targeted fixes.
 
 For non-web targets, compare simulator/emulator output when feasible. If not feasible, validate structurally and state what was not visually verified.
 
@@ -24,10 +24,10 @@ For non-web targets, compare simulator/emulator output when feasible. If not fea
 - Asset source fidelity: actual Sketch bitmap layers are exported as bitmaps; text-bearing UI is not flattened into images unless the source is itself a bitmap.
 - Exact details: logos, avatars, user images, social marks, product marks, gradients, fades, masks, and clipped artwork match the Sketch source, not an approximate substitute.
 - Alpha and compositing: exported assets are not double-faded with extra code opacity, and separate Sketch fades/masks are represented intentionally.
-- Asset hygiene: referenced assets exist, no active asset is unused, and temporary screenshots/crops/export attempts are removed.
+- Asset hygiene: referenced assets exist, no active asset is unused, and temporary canvas check images/crops/export attempts are removed.
 - Responsiveness / constraints: pins, stacks, and resizing come from extracted data, not eyeballing. If relative layout metadata exists, verify the implementation follows it; otherwise verify parity at the frame viewport first and keep nearby viewport behavior flexible where practical.
 - Accessibility basics: labels, contrast, and focus order where applicable.
-- Tokens in code: swatches/shared styles map to the project theme, not stray hex values.
+- Tokens in code: Color Variables and shared styles map to the project theme, not stray hex values.
 - Component reuse: repeated symbol instances are represented by reusable components and data where appropriate.
 
 ## Mismatch recovery

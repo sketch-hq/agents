@@ -21,7 +21,7 @@ For the full MCP override surface, call `get_guide` with `topic: "symbols"`. Typ
 
 - `stringValue` on a Label/Text layer → `label`, `placeholder`, `title`, or `text`.
 - `image` on an inner Image layer → `iconSrc`, `imageSrc`, or Image source.
-- `textColor` / color swatch override → class name referencing a theme token, or a `tone` / `variant` prop.
+- `textColor` / Color Variable override → class name referencing a theme token, or a `tone` / `variant` prop.
 - `symbolID` swap → child component `variant` prop.
 - `isVisible` → conditional render (`{cond && <X />}`).
 - `imageResizeBehavior` → platform `object-fit` / equivalent; use numeric values from `get_symbol_overrides` (see `get_guide` with `topic: "symbols"`).
@@ -84,4 +84,4 @@ Use `instance.overridesForExpandedLayer(nested)` (see `get_guide` with `topic: "
 
 Translate each major region group into its own component/section — not one monolithic file unless the project does. Parent/child and sibling structure must come from `get_layer_tree_summary` or a targeted hierarchy probe, not from an assumed page template.
 
-For token and layout mapping, use [extraction.md](extraction.md). For asset export from symbol masters or image layers, use [assets.md](assets.md). For screenshot comparison, use [validation.md](validation.md).
+For token and layout mapping, use [extraction.md](extraction.md). For asset export from symbol masters or image layers, use [assets.md](assets.md). For canvas checks, use [validation.md](validation.md).

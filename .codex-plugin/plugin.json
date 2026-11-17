@@ -1,14 +1,14 @@
 {
   "name": "sketch",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Sketch plugin",
   "author": {
     "name": "Sketch B.V.",
     "url": "https://sketch.com"
   },
   "homepage": "https://sketch.com",
-  "logo": "./assets/icon.svg",
   "repository": "https://github.com/sketch-hq/agents",
+  "license": "Apache-2.0",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {

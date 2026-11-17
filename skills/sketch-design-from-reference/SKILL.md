@@ -1,6 +1,6 @@
 ---
 name: sketch-design-from-reference
-description: Recreates or builds UI designs in Sketch from a reference URL, screenshot, or source code with side-by-side screenshot fidelity validation using Sketch MCP (`get_document_info`, `get_layer_tree_summary`, `get_screenshot`, `get_design_assets`, `get_symbol_overrides`, targeted `run_code`). Use when the user wants to design, mock up, or reproduce a page or screen in Sketch from the web, an image, or code.
+description: Recreates or builds UI designs in Sketch from a reference URL, screenshot, or source code with side-by-side canvas checks for fidelity validation using Sketch MCP (`get_guide`, `get_document_info`, `get_layer_tree_summary`, `get_screenshot`, `get_design_assets`, `get_symbol_overrides`, targeted `run_code`). Use when the user wants to design, mock up, or reproduce a page or screen in Sketch from the web, an image, or code.
 disable-model-invocation: false
 ---
 
@@ -10,19 +10,19 @@ Build or refine a Sketch design to match a reference. This skill is for design-i
 
 ## Fidelity first
 
-The goal is visual parity with the reference — not a plausible page with similar sections. Similar is not done. Do not stop when content exists; stop when side-by-side screenshot comparison passes the completion criteria in [references/validation.md](references/validation.md).
+The goal is visual parity with the reference — not a plausible page with similar sections. Similar is not done. Do not stop when content exists; stop when side-by-side canvas checks pass the completion criteria in [references/validation.md](references/validation.md).
 
 ## Required Sketch guides
 
 - `get_guide` with `topic: "mcp"` — always; MCP prerequisites, `run_code` rules, failure handling, and visual verification.
 - `get_guide` with `topic: "use"` — Sketch editing, stacks, symbols, styles, overrides, assets, and prototyping.
-- `get_guide` with `topic: "layout"` — before creating or restructuring Frames, Groups, stacks, page placement, sizing, pins, or container types.
+- `get_guide` with `topic: "layout"` — before creating or restructuring Frames, Groups, stacks, sizing, pins, or container types.
+- `get_guide` with `topic: "organization"` — before placing new top-level Frames on a page, or working with pages or Sketch Sections (canvas groups of whole frames, not regions of a web page).
 
-Fetch guide subtopics on demand when the task needs them: `troubleshooting`, `layout`, `styling`, `symbols`, `assets`, and `prototyping`.
+Fetch guide subtopics on demand when the task needs them: `troubleshooting`, `styling`, `symbols`, `assets`, and `prototyping`.
 
 ## Prerequisites
 
-- Sketch running with MCP enabled (Settings → General → Allow AI tools to interact with open documents).
 - A target document is open, or the user expects you to create/use a new document.
 - A reference is available as a URL, screenshot, or source code.
 - Scope is clear enough to act: full page vs single frame, target width, dark/light mode, and target page/frame when the document has several candidates.
@@ -56,6 +56,8 @@ Inspect before mutating. Start with read-only MCP tools:
 
 Prefer editing an existing frame only when you are sure it maps to the requested design. Otherwise, create a new frame.
 
+Apply the tree-summary caveats from the required `use` guide; never treat an unexpanded or truncated node as empty.
+
 ### Step 3 — Plan structure before pixels
 
 Define the layer plan before drawing:
@@ -72,7 +74,7 @@ For every structured region, decide the Sketch stack model before drawing: direc
 
 ### Step 4 — Establish tokens and base frame
 
-Create or match document swatches/shared styles for background, border, text, brand, muted text, and important surfaces. Set the page/frame background intentionally and clear accidental fills from structural groups. For symbol details, call `get_guide` with `topic: "symbols"`.
+Create or match document Color Variables (`document.swatches`) and shared styles for background, border, text, brand, muted text, and important surfaces. Set the page/frame background intentionally and clear accidental fills from structural groups. For symbol details, call `get_guide` with `topic: "symbols"`.
 
 Use values from the reference: computed CSS, sampled screenshot colors, or code tokens. For styling details, call `get_guide` with `topic: "styling"`.
 
@@ -96,7 +98,7 @@ Build one top-level region at a time. After each region's content batch:
 2. Compare that region band to the reference anchor — list deltas using the taxonomy in [references/validation.md](references/validation.md).
 3. Fix major mismatches before starting the next region.
 
-After structural edits, re-query with `get_layer_tree_summary` or screenshot the frame. For safe reorder/reparent patterns, read [references/editing-patterns.md](references/editing-patterns.md).
+After structural edits, re-query with `get_layer_tree_summary` or run a canvas check on the frame. For safe reorder/reparent patterns, read [references/editing-patterns.md](references/editing-patterns.md).
 
 ### Step 6 — Symbols, assets, and overrides
 
@@ -110,11 +112,11 @@ For symbol override patterns, read [references/symbols.md](references/symbols.md
 
 ### Step 7 — Targeted fixes only
 
-When the user reports an issue or screenshot comparison shows a mismatch:
+When the user reports an issue or a canvas check shows a mismatch:
 
 1. Inspect the current layer with `get_layer_tree_summary` or a targeted probe before mutating.
 2. Change only the reported property: one frame value, text style, color, layer order, stack property, or override.
-3. Re-screenshot and confirm child counts are unchanged unless deletion was intentional.
+3. Re-run the canvas check and confirm child counts are unchanged unless deletion was intentional.
 
 If layout breaks or layers are lost, say so immediately and tell the user to Undo/Revert before continuing.
 
@@ -122,10 +124,10 @@ If layout breaks or layers are lost, say so immediately and tell the user to Und
 
 Do not claim done until completion criteria pass — see [references/validation.md](references/validation.md) → Completion criteria.
 
-1. Capture a full-frame `get_screenshot` at the reference anchor width.
+1. Run a full-frame canvas check at the reference anchor width.
 2. Run the region gate for every band in the fidelity spec against the reference anchor screenshot.
 3. If any major delta remains, return to Step 7 and iterate. Do not hand off with "close enough" layouts.
-4. Summarize symbols used, tokens/styles created, target artboard/frame name and ID, regions verified, and any remaining minor deltas.
+4. Summarize symbols used, tokens/styles created, target Frame or Graphic name and ID, regions verified, and any remaining minor deltas.
 5. Do not run `zoomToFitCanvas` until the task is complete.
 
 ## Rules
@@ -136,7 +138,7 @@ Direction-specific rules for Sketch → design. Generic MCP/script rules come fr
 2. Baseline child counts before and after reorder, reparent, add, or remove operations.
 3. Never assign `parent.layers = [...]`; use `layer.index` for reorder and `child.parent = newParent` for reparent.
 4. Match the reference's region structure; the same visual content should have the same parent/sibling relationship unless there is a deliberate reason to diverge.
-5. Screenshot after each meaningful batch and use the screenshot deltas to choose the next edit.
+5. Run a canvas check after each meaningful batch and use the deltas to choose the next edit.
 6. Structured layout uses stacks by default. If siblings behave like flex, grid, list, form, nav, or card content in the reference, create or preserve a Sketch stack instead of hand-positioning every child.
 7. Assets are assets. Do not redraw complex artwork, photos, screenshots, or brand marks as low-fidelity vector approximations; export/import or assign image/SVG assets.
 8. No guessing. Do not invent layout, copy, colors, spacing, or assets from memory or generic UI patterns. Extract from the reference; if a value is missing, re-fetch or ask the user.
@@ -145,11 +147,11 @@ Direction-specific rules for Sketch → design. Generic MCP/script rules come fr
 
 ## Pitfalls
 
-- Recreating the page to fix a small mismatch wastes tuned work and introduces new bugs. Make surgical edits from screenshot deltas.
+- Recreating the page to fix a small mismatch wastes tuned work and introduces new bugs. Make surgical edits from canvas check deltas.
 - Placing images directly on symbol instances can break hierarchy or fail in the API. Put image layers in the master and drive per-instance image overrides.
-- Skipping screenshots hides layout, ordering, and color errors. Screenshot every batch.
+- Skipping a canvas check hides layout, ordering, and color errors. Run one every batch.
 - Reordering with `parent.layers = [...]` can delete children or duplicate object IDs. Use safe reorder patterns instead.
-- Stack order can look inverted if index and packing direction are misunderstood. Use `get_guide` with `topic: "layout"` and verify with screenshot.
+- Stack order can look inverted if index and packing direction are misunderstood. Use `get_guide` with `topic: "layout"` and verify with a canvas check.
 - Whole page or region scripts are hard to validate, debug, and recover from. Split by region, stack setup, and small sibling batches.
 - Structured layout built with manual frames drifts when spacing or order changes. Use Sketch stacks for rows, columns, lists, forms, navs, cards, and repeated regions.
 - Complex artwork rebuilt as primitive shapes produces low-quality approximations. Export/import SVG/PNG or use image overrides; reserve shapes for simple UI primitives.
@@ -160,26 +162,29 @@ Direction-specific rules for Sketch → design. Generic MCP/script rules come fr
 
 ## Troubleshooting
 
-For bridge/tool-call failures, parser errors, MCP connection problems, or screenshot failures, call `get_guide` with `topic: "troubleshooting"` before retrying.
+For bridge/tool-call failures, parser errors, MCP connection problems, or `get_screenshot` failures, call `get_guide` with `topic: "troubleshooting"` before retrying.
 
 For document-operation failures:
 
 - Layout/stack/order issues → `get_guide` with `topic: "layout"`.
+- Overlapping top-level frames, or page and Sketch Section placement → `get_guide` with `topic: "organization"`.
 - Symbol override issues → `get_guide` with `topic: "symbols"`.
 - Export/import/image issues → `get_guide` with `topic: "assets"`.
 
 ### Design-build symptoms
 
 - Child count dropped after a script: tell the user to Undo, then inspect the operation. Do not repeat a bulk layer assignment.
-- `get_screenshot` is empty or wrong: re-resolve the frame/layer ID, then screenshot the page or parent frame if needed.
-- Symbol override has no effect: re-fetch `get_symbol_overrides`, rebuild the override ID from `commonOverrideIDPrefix + '_' + property`, then screenshot.
+- `get_screenshot` is empty or wrong: re-resolve the frame/layer ID, then run a canvas check on the page or parent frame if needed.
+- `get_screenshot` is refused as too large: move inward to a child frame instead — widening makes it worse → `get_guide` with `topic: "troubleshooting"`.
+- Symbol override has no effect: re-fetch `get_symbol_overrides`, rebuild the override ID from `commonOverrideIDPrefix + '_' + property`, then run a canvas check.
 - Text overlaps in a row stack: inspect child order and gap; fix one stack property or child index at a time.
 
 ## References
 
 - `get_guide` with `topic: "mcp"` — MCP tools, `run_code`, troubleshooting, visual verification, and completion rules
 - `get_guide` with `topic: "use"` — Sketch editing, stacks, symbols, styles, overrides, assets, and content verification
-- `get_guide` with `topic: "layout"` — stacks, page placement, sizing, pins, container types, reorder/reparent, and layout drift
+- `get_guide` with `topic: "layout"` — stacks, sizing, pins, container types, reorder/reparent, and layout drift
+- `get_guide` with `topic: "organization"` — pages, page placement of top-level frames, and Sketch Sections
 - [Reference extraction](references/reference-extraction.md)
 - [Safe editing patterns](references/editing-patterns.md)
 - [Symbol override patterns](references/symbols.md)

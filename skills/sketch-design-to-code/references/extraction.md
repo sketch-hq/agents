@@ -7,7 +7,7 @@ Use this reference when Step 3 needs more detail than the main workflow provides
 Start with read-only MCP tools:
 
 1. `get_document_info` — document ID, pages, page layer counts, and top-level Frames/Graphics with positions and dimensions.
-2. `get_layer_tree_summary` — hierarchy, IDs, names, dimensions, text snippets, symbol-instance override counts, and stack hints for a page, frame, or layer.
+2. `get_layer_tree_summary` — hierarchy, IDs, names, dimensions, text snippets, instance details and stack hints for a page, frame, or layer.
 3. Targeted `run_code` — only for properties not exposed by the dedicated tools, such as exact style values, pins/sizing, masks, symbol master IDs, override-capable layers, export settings, image sources, or custom geometry checks.
 
 ## Large trees
@@ -20,6 +20,8 @@ Use shallow-to-deep extraction:
 4. Use `run_code` only after required nodes are identified and a summary omits needed details.
 
 Do not code from a partial tree when major sibling or parent regions are still unknown.
+
+`get_layer_tree_summary` lists children topmost-first, uses compact tool-specific type names, and does not recurse into Graphics. Treat a childless Graphic as an unexpanded container and inspect it with a targeted `run_code` probe when its contents affect the implementation. `depth` defaults to 3 and is clamped to 1...10; a `… N children` line means the subtree was truncated and should be re-queried by `layerID`.
 
 ## Asset classification probe
 
@@ -36,16 +38,16 @@ Classification heuristics:
 ## What to collect
 
 - Hierarchy: IDs, names, types, visibility, lock state, and parent/child relationships.
-- Layout: frame, resizing behavior, pins, stack layout, gap, padding, clipping, major region geometry, and whether the frame represents a full page/screen or an explicitly scoped component/section.
+- Layout: frame, resizing behavior, pins, stack layout, gap, padding, clipping, major region geometry, and whether the frame represents a full page/screen or an explicitly scoped component or page region.
 - Typography: font family, size, weight, line height, alignment, decoration, and text content.
 - Styling: fills, borders, shadows, blur, corner radii, opacity, tint, masks, and shared style names.
-- Tokens: document swatches, color variables, shared style names, and optional source library names.
+- Tokens: document Color Variables (`document.swatches`), shared style names, and optional source library names.
 - Symbols: nested symbols, symbol instances, master names, instance IDs, and override-capable fields.
 - Assets: configured `layer.exportFormats`, image sources, bitmap layers, icons, logos, pure artwork groups, text-bearing UI groups, and mixed groups that need code-plus-asset splitting.
 
 ## Tokens and layout mapping
 
-Map Sketch swatches and shared styles to the project's token system. Prefer existing project variables over new literals.
+Map Sketch Color Variables and shared styles to the project's token system. Prefer existing project variables over new literals.
 
 - `Family/Background` (`#...`) → `family.background` / `--color-family-background`.
 - `Family/Border` (`#...`) → `family.border`.
@@ -66,18 +68,17 @@ Do not hand-eyeball gap values. Read them from `get_layer_tree_summary` when ava
 
 ## Responsive layout intent
 
-Assume the target frame defines a full page or screen unless the user explicitly says it is a partial component, section, or crop. Use the frame dimensions as the reference viewport for visual parity.
+Assume the target frame defines a full page or screen unless the user explicitly says it is a partial component, page region, or crop. Use the frame dimensions as the reference viewport for visual parity.
 
 When Sketch exposes stacks, pins/resizing, or other relative layout constraints, translate those into responsive code rather than fixed absolute placement. When the design has no clear relative layout metadata, match the layout at the frame's viewport first, then keep containers, text, spacing, and media flexible for nearby viewport sizes where that does not change the reference appearance.
 
-## Swatch probe example
+## Color Variable probe example
 
 ```javascript
 const sketch = require('sketch');
 const doc = sketch.getSelectedDocument();
-function hex(c) { return c ? String(c).slice(0, 7) : null; }
 const swatches = doc.swatches.map(function (s) {
-  return { name: s.name, hex: hex(s.color) };
+  return { name: s.name, color: s.color };
 });
 console.log(JSON.stringify({ ok: true, swatches: swatches }));
 ```

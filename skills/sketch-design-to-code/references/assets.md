@@ -17,7 +17,7 @@ Classify assets before exporting or coding them:
 
 - Export icons, bitmaps, logos, and other designed assets from Sketch when the document contains them.
 - Do not invent placeholder icon packs when the design has assets.
-- Export production assets from the intended Sketch layer/group/instance, not by cropping full-frame screenshots or browser screenshots.
+- Export production assets from the intended Sketch layer/group/instance, not by cropping full-frame canvas checks or browser screenshots.
 - Treat `get_screenshot` output as a validation reference, not an asset source.
 - Use `get_guide` with `topic: "assets"` for the full `sketch.export` option surface.
 - Use absolute `output` paths. Use explicit `filename` values for ad hoc fallback exports; when using configured `exportFormats`, let Sketch preserve the layer preset naming unless you are intentionally renaming the asset.
@@ -41,7 +41,7 @@ Before finishing:
 
 - Every file in the target asset folder is referenced by code or intentionally documented as shared project inventory.
 - Every referenced asset exists on disk.
-- Temporary screenshots, crop sources, inspection dumps, and unused export attempts are removed.
+- Temporary canvas check images, crop sources, inspection dumps, and unused export attempts are removed.
 - The final summary distinguishes source bitmaps, exported artwork, and code-rendered UI when that distinction affected implementation.
 
 ## Typical project paths
