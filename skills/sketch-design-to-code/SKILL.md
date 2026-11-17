@@ -6,7 +6,7 @@ description: >
   `get_symbol_overrides`, `get_design_assets`, targeted `run_code`). Inspects
   existing project code and conventions first, maps symbols and overrides to
   reusable components, exports assets, and validates implementations against
-  Sketch screenshots (web: running app vs `get_screenshot`).
+  Sketch canvas checks (web: running app vs `get_screenshot`).
   Use when implementing or updating UI in React, Tailwind, SwiftUI, Kotlin, or other technologies from a Sketch document, page, frame, or layer.
 disable-model-invocation: false
 ---
@@ -44,7 +44,7 @@ Follow these steps in order. The main flow should be enough for ordinary work; l
   - User-selected layer in Sketch.
   - Layer IDs or names via `get_document_info` / `get_layer_tree_summary`; use targeted `run_code` only if the dedicated tools cannot resolve the target. Confirm if multiple matches.
 3. Treat a target frame as a full page or screen unless the user explicitly says it is a partial component, page region, or crop. A Sketch Section, which `get_document_info` lists under `sections`, is a canvas group of whole frames, not a region of a page: resolve it to its frames. A frame's `sectionID` is its innermost section, so include frames whose `sectionID` is a section nested inside it, following `parentSectionID` in `sections`. `sections` leaves out Components with Variants: map those with [references/symbol-to-code.md](references/symbol-to-code.md) instead. If this leaves several frames, ask the user which one to implement, or treat each one as a target frame when they want the whole section.
-4. Capture reference screenshot: `get_screenshot` on each target frame (`targetDocumentID` + `layerID`). This is the primary visual reference for implementation and validation.
+4. Capture a reference canvas check: `get_screenshot` on each target frame (`targetDocumentID` + `layerID`). This is the primary visual reference for implementation and validation.
 
 If selection is empty and no share link resolved, stop and ask the user to select the target frame.
 
@@ -88,13 +88,13 @@ Call `get_symbol_overrides` per distinct instance (`kind: all`) when symbols or 
 
 ### Step 5 — Export assets
 
-Export icons, bitmaps, logos, pure artwork groups, and other designed assets from exact Sketch layers or symbol sources when the document contains them. Do not invent placeholder icon packs for designed assets, and do not crop production assets from full-frame screenshots; screenshots are for verification. Before choosing fallback export options, inspect each export candidate for configured `layer.exportFormats`; when they exist, prefer passing those formats to `sketch.export` so exported files preserve the document's format, size, and naming presets. Put exports in project-conventional paths or a temp directory, log full paths, and verify files exist.
+Export icons, bitmaps, logos, pure artwork groups, and other designed assets from exact Sketch layers or symbol sources when the document contains them. Do not invent placeholder icon packs for designed assets, and do not crop production assets from full-frame canvas checks; canvas checks are for verification. Before choosing fallback export options, inspect each export candidate for configured `layer.exportFormats`; when they exist, prefer passing those formats to `sketch.export` so exported files preserve the document's format, size, and naming presets. Put exports in project-conventional paths or a temp directory, log full paths, and verify files exist.
 
 For asset classification details, exact export rules, fidelity checks, and path examples, read [references/assets.md](references/assets.md).
 
 ### Step 6 — Implement code
 
-Translate design → project conventions with 1:1 visual parity vs the Sketch screenshot and extracted context:
+Translate design → project conventions with 1:1 visual parity vs the Sketch frame and extracted context:
 
 - Match spacing, alignment, sizing, and hierarchy.
 - Match typography and color usage.
@@ -117,8 +117,8 @@ When the target is a web app:
 1. Existing runnable? Follow README / `package.json` scripts / mise. Start dev server (`npm run dev`, etc.).
 2. No runnable yet? Ask the user: "There's no web dev setup in this project. Should I scaffold a runnable app (e.g. Vite + React + Tailwind) in a new folder?" If yes, create minimal scaffold, wire the page, document how to run in README.
 3. Open the page (dev URL or preview).
-4. Compare browser screenshot vs Sketch `get_screenshot` on the same frame (see [validation.md](references/validation.md)).
-5. Iterate targeted fixes → re-screenshot both sides until parity is reasonable.
+4. Compare the browser screenshot against a canvas check of the same frame (see [validation.md](references/validation.md)).
+5. Iterate targeted fixes → repeat both captures until parity is reasonable.
 
 Log what you verified in the final reply.
 
@@ -132,7 +132,7 @@ When the target is mobile or native (no browser loop):
 
 ### Step 9 — Finalize and validate
 
-Before claiming done, run the validation checks against the latest Sketch screenshot and implementation (web: after browser comparison).
+Before claiming done, run the validation checks against the latest canvas check and implementation (web: after browser comparison).
 
 - Ensure build/typecheck passes for the stack used.
 - Summarize: files added/changed, symbol → component map, how to run (with URL if web).
@@ -140,7 +140,7 @@ Before claiming done, run the validation checks against the latest Sketch screen
 - Mention remaining symbol reuse opportunities if repetition was left inline.
 - Do not assume stale Sketch data — re-query with `run_code` when values are uncertain.
 
-For code-specific screenshot checks and mismatch recovery, read [references/validation.md](references/validation.md).
+For code-specific canvas checks and mismatch recovery, read [references/validation.md](references/validation.md).
 
 ## Rules
 
@@ -155,7 +155,7 @@ Direction-specific rules for Sketch → code. All generic Sketch MCP rules come 
 7. Ask before scaffolding — new runnable web app only when none exists and user agrees (unless they already asked for a standalone implementation folder).
 8. Live data — re-query Sketch when unsure; do not rely on outdated extraction from earlier in the session.
 9. Asset classification — bitmap-in-design may stay bitmap; text-bearing UI, cards, forms, navigation, and sections should be implemented as code unless the source is an actual bitmap layer.
-10. Exact exports — export production assets from selected Sketch layers/groups/symbols, never by cropping a verification screenshot.
+10. Exact exports — export production assets from selected Sketch layers/groups/symbols, never by cropping a canvas check.
 
 ## Pitfalls
 
@@ -164,7 +164,7 @@ Code-only pitfalls below. Bridge/script issues are in `get_guide` with `topic: "
 - Flattening symbols loses the override model. Use one master → one component; see [symbol-to-code.md](references/symbol-to-code.md).
 - Flattening text-bearing cards or sections into images makes the result fragile and inaccessible; export only source bitmap layers or non-semantic artwork.
 - Rebuilding source bitmap content as HTML/CSS can also be wrong; if Sketch says the content is an Image layer, use the exported bitmap unless the user explicitly asks for reconstruction.
-- Cropping assets from screenshots bakes in accidental pixels, scale, masks, and neighboring content. Select and export the exact Sketch layer instead.
+- Cropping assets from a canvas check bakes in accidental pixels, scale, masks, and neighboring content. Select and export the exact Sketch layer instead.
 - Using `fs` in `run_code` fails because `fs is not a core package`. Use `mkdir -p` in shell and export in Sketch script only.
 - Using the wrong region model misses UI outside the walked subtree. In Step 3, shallow-probe the hierarchy and map every major sibling/parent group before coding.
 - Monolithic `run_code` scripts are hard to debug and recover from. Use one small flat script per probe or concern; do not combine probe, mutation, styling, and export setup in one call.
@@ -173,7 +173,7 @@ Code-only pitfalls below. Bridge/script issues are in `get_guide` with `topic: "
 
 Bridge/tool-call failures: call `get_guide` with `topic: "troubleshooting"` and analyze `run_code` failures before retrying. For Sketch document-operation failures, call the relevant topic (`layout`, `symbols`, or `assets`) for the failed area.
 
-### Empty selection / screenshot fails
+### Empty selection / canvas check fails
 
 - Ask user to select target frame, or resolve from share link `/f/<uuid>`.
 - Re-run target resolution with explicit `layerID` on `get_screenshot`.

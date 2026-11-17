@@ -84,4 +84,4 @@ Use `instance.overridesForExpandedLayer(nested)` (see `get_guide` with `topic: "
 
 Translate each major region group into its own component/section — not one monolithic file unless the project does. Parent/child and sibling structure must come from `get_layer_tree_summary` or a targeted hierarchy probe, not from an assumed page template.
 
-For token and layout mapping, use [extraction.md](extraction.md). For asset export from symbol masters or image layers, use [assets.md](assets.md). For screenshot comparison, use [validation.md](validation.md).
+For token and layout mapping, use [extraction.md](extraction.md). For asset export from symbol masters or image layers, use [assets.md](assets.md). For canvas checks, use [validation.md](validation.md).

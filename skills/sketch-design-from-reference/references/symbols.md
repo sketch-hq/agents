@@ -38,7 +38,7 @@ console.log(JSON.stringify({
 
 Image resize behavior `2` means Fit: the replacement image stays within the slot and preserves its aspect ratio.
 
-Fallback to name matching only when you cannot get a fresh `commonOverrideIDPrefix`, and screenshot afterwards.
+Fallback to name matching only when you cannot get a fresh `commonOverrideIDPrefix`, and run a canvas check afterwards.
 
 ## Common failures
 
