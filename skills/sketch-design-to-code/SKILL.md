@@ -2,12 +2,12 @@
 name: sketch-design-to-code
 description: >
   Generates code from Sketch designs with 1:1 visual fidelity using
-  Sketch MCP (`get_document_info`, `get_layer_tree_summary`, `get_screenshot`,
+  Sketch MCP (`get_guide`, `get_document_info`, `get_layer_tree_summary`, `get_screenshot`,
   `get_symbol_overrides`, `get_design_assets`, targeted `run_code`). Inspects
   existing project code and conventions first, maps symbols and overrides to
   reusable components, exports assets, and validates implementations against
   Sketch screenshots (web: running app vs `get_screenshot`).
-  Use when implementing or updating UI in React, Tailwind, SwiftUI, Kotlin, or other technologies from an Sketch document, page, frame, or layer.
+  Use when implementing or updating UI in React, Tailwind, SwiftUI, Kotlin, or other technologies from a Sketch document, page, frame, or layer.
 disable-model-invocation: false
 ---
 
@@ -20,13 +20,12 @@ Generate code from Sketch designs with project-aware reuse, symbol-driven compon
 - `get_guide` with `topic: "mcp"` — always; MCP prerequisites, `run_code` rules, failure handling, and visual verification.
 - `get_guide` with `topic: "use"` — Sketch inspection, symbols, overrides, stacks, styles, exports, and content verification.
 
-Fetch guide subtopics on demand when the task needs them: `troubleshooting`, `layout`, `styling`, `symbols`, `assets`, and `prototyping`.
+Fetch guide subtopics on demand when the task needs them: `troubleshooting`, `layout`, `organization`, `styling`, `symbols`, `assets`, and `prototyping`.
 
 Inverse workflow: Sketch from code/URL is sketch-design-from-reference
 
 ## Prerequisites
 
-- Sketch running with MCP enabled (Settings → General → Allow AI tools to interact with open documents).
 - Target document open; user selection or explicit frame ID / share link (`https://sketch.com/s/<doc-uuid>/f/<frame-uuid>`).
 - Project workspace accessible — agent can read source, configs, and package manifests.
 - Know the target platform from user or repo signals (e.g. `package.json` → web, `*.xcodeproj` → iOS, `android/` → Android). Ask if ambiguous.
@@ -44,14 +43,14 @@ Follow these steps in order. The main flow should be enough for ordinary work; l
   - Sketch share link — extract `/f/<canvas-frame-uuid>` from URLs like `https://sketch.com/s/<doc-uuid>/f/<frame-uuid>`; find that layer using the share-link guidance in `get_guide` with `topic: "use"`, and select it. Prefer this over current selection or name matching.
   - User-selected layer in Sketch.
   - Layer IDs or names via `get_document_info` / `get_layer_tree_summary`; use targeted `run_code` only if the dedicated tools cannot resolve the target. Confirm if multiple matches.
-3. Treat a target frame as a full page or screen unless the user explicitly says it is a partial component, section, or crop.
-4. Capture reference screenshot: `get_screenshot` on the target frame (`targetDocumentID` + `layerID`). This is the primary visual reference for implementation and validation.
+3. Treat a target frame as a full page or screen unless the user explicitly says it is a partial component, page region, or crop. A Sketch Section, which `get_document_info` lists under `sections`, is a canvas group of whole frames, not a region of a page: resolve it to its frames. A frame's `sectionID` is its innermost section, so include frames whose `sectionID` is a section nested inside it, following `parentSectionID` in `sections`. `sections` leaves out Components with Variants: map those with [references/symbol-to-code.md](references/symbol-to-code.md) instead. If this leaves several frames, ask the user which one to implement, or treat each one as a target frame when they want the whole section.
+4. Capture reference screenshot: `get_screenshot` on each target frame (`targetDocumentID` + `layerID`). This is the primary visual reference for implementation and validation.
 
 If selection is empty and no share link resolved, stop and ask the user to select the target frame.
 
 ### Step 2 — Inspect the codebase
 
-Inspect the project before creating files. Reuse matching components and tokens, match neighboring file layout and state patterns, and keep scope to the selected frame unless the user asked for more.
+Inspect the project before creating files. Reuse matching components and tokens, match neighboring file layout and state patterns, and keep scope to the target frames unless the user asked for more.
 
 - Existing UI components? Check `src/components`, design system packages, and Storybook.
 - Design tokens / theme? Check CSS variables, Tailwind `@theme`, `tokens.ts`, and asset catalogs.
@@ -64,10 +63,12 @@ Inspect the project before creating files. Reuse matching components and tokens,
 Start with dedicated read-only MCP tools before writing custom probes.
 
 1. Call `get_document_info` for the document ID, pages, page layer counts, and top-level Frames/Graphics with positions and dimensions.
-2. Call `get_layer_tree_summary` on the target page, frame, or layer for hierarchy, IDs, names, dimensions, text snippets, symbol-instance override counts, and stack hints.
+2. Call `get_layer_tree_summary` on the target page, frame, or layer for hierarchy, IDs, names, dimensions, text snippets, instance details, and stack hints.
 3. Use targeted `run_code` only for details those tools do not expose: exact style values, pins/sizing, masks, symbol master IDs, override-capable layers, export settings, image sources, or custom geometry checks. Keep scripts small and flat: one probe or property concern per call, with a short title and JSON log.
 
 Collect enough data to explain hierarchy, layout, typography, styling, reusable styles, tokens, symbols, assets, and geometry for the selected frame and relevant descendants. Before coding, produce a short asset classification ledger for major regions and export candidates: actual Bitmap/Image layers, pure illustration/path artwork, icon/logo/symbol artwork, text-bearing UI, and mixed UI that should be split into coded structure plus exported inner artwork. For export candidates, record configured `layer.exportFormats` when present; they capture designer intent for file type, scale or absolute-size variants, prefix/suffix naming, and platform folder naming. For layout, identify whether the design uses stacks, pins/resizing, or other relative layout constraints; those define responsive intent. For large trees, shallow-map first, then deep-dive only critical subtrees.
+
+Apply the tree-summary caveats from the required `use` guide; never treat an unexpanded or truncated node as empty.
 
 For extraction examples, asset classification probes, and large-tree strategy, read [references/extraction.md](references/extraction.md).
 
@@ -147,8 +148,8 @@ Direction-specific rules for Sketch → code. All generic Sketch MCP rules come 
 
 1. Project first — read existing code before creating components or folders.
 2. Symbols → components — overrides → props; never copy-paste three identical button implementations.
-3. Tokens over hex — prefer document swatches and shared styles; hardcode only when unlinked in Sketch.
-4. Frame scope — assume a frame is a full page or screen unless the user says it is only a component, section, or crop.
+3. Tokens over hex — prefer document Color Variables (`document.swatches`) and shared styles; hardcode only when unlinked in Sketch.
+4. Frame scope — assume a frame is a full page or screen unless the user says it is only a component, page region, or crop.
 5. Responsive intent — follow stacks, pins/resizing, and relative layout when present; otherwise match the frame viewport first and keep layout flexible where practical.
 6. Minimal diff — implement the requested frame; no drive-by refactors.
 7. Ask before scaffolding — new runnable web app only when none exists and user agrees (unless they already asked for a standalone implementation folder).

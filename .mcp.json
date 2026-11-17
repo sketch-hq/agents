@@ -2,7 +2,25 @@
   "mcpServers": {
     "sketch": {
       "type": "http",
-      "url": "http://localhost:31126/mcp"
+      "url": "http://localhost:31126/mcp",
+      "_meta": {
+        "ideToolIconPath": "./assets/composer-icon.svg",
+        "ideToolIconRendersAsTemplate": true,
+        "ideToolTitles": {
+          "get_document_info": "Get Sketch document info",
+          "get_layer_tree_summary": "Get Sketch layer tree",
+          "list_comments": "List Sketch comments",
+          "save_comment": "Save Sketch comment",
+          "delete_comment": "Delete a Sketch comment or annotation",
+          "list_notifications": "List Sketch user notifications",
+          "get_screenshot": "Get Sketch screenshot",
+          "get_libraries": "Get Sketch libraries",
+          "get_design_assets": "Get Sketch design assets",
+          "get_symbol_overrides": "Get Sketch symbol overrides",
+          "get_guide": "Get Sketch MCP guide",
+          "run_code": "Run code in Sketch"
+        }
+      }
     }
   }
 }

@@ -21,7 +21,7 @@ For the full MCP override surface, call `get_guide` with `topic: "symbols"`. Typ
 
 - `stringValue` on a Label/Text layer → `label`, `placeholder`, `title`, or `text`.
 - `image` on an inner Image layer → `iconSrc`, `imageSrc`, or Image source.
-- `textColor` / color swatch override → class name referencing a theme token, or a `tone` / `variant` prop.
+- `textColor` / Color Variable override → class name referencing a theme token, or a `tone` / `variant` prop.
 - `symbolID` swap → child component `variant` prop.
 - `isVisible` → conditional render (`{cond && <X />}`).
 - `imageResizeBehavior` → platform `object-fit` / equivalent; use numeric values from `get_symbol_overrides` (see `get_guide` with `topic: "symbols"`).

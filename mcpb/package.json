@@ -1,6 +1,6 @@
 {
   "name": "sketch-mcp",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Exposes MCP tools for inspection, analysis, and modification of Sketch documents.",
   "type": "module",
   "main": "server/index.js",
@@ -14,13 +14,13 @@
     "mcp",
     "sketch"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@anthropic-ai/mcpb": "^2.1.2",
     "prettier": "^3.5.3"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.28.0"
+    "@modelcontextprotocol/sdk": "^1.30.0"
   },
   "overrides": {
     "tmp": "^0.2.6"

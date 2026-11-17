@@ -19,7 +19,7 @@ if (!stack) {
   var order = ['<CHILD-A-NAME>', '<CHILD-B-NAME>', '<CHILD-C-NAME>'];
   for (var i = 0; i < order.length; i++) {
     var L = stack.layers.find(function (l) { return l.name === order[i]; });
-    if (L) L.index = i;
+    if (L) L.index = order.length - 1 - i;
   }
   stack.stackLayout.apply();
   console.log(JSON.stringify({
@@ -31,6 +31,8 @@ if (!stack) {
 ```
 
 If `childCountAfter !== childCountBefore`, tell the user to Undo immediately.
+
+The `order` array above must contain every Stack child exactly once, with unique names, in canvas reading order from left-to-right or top-to-bottom. Stack packing runs in reverse `parent.layers` index order, so its first item receives the highest index. Prefer IDs when names are not unique. `stackingOrder` only changes which overlapping child is drawn and hit-tested on top; it does not change packing positions.
 
 ## Reparent into a sibling region
 
@@ -45,10 +47,11 @@ var beforeSource = sourceStack.layers.length;
 
 var region = frame.layers.find(function (l) { return l.name === '<REGION-NAME>'; });
 if (!region) {
-  region = new sketch.Group({
+  region = new sketch.Group.Frame({
     parent: frame,
     name: '<REGION-NAME>',
     frame: { x: 0, y: 0, width: sourceStack.frame.width, height: 56 },
+    background: { enabled: false },
   });
 }
 var beforeRegion = region.layers.length;
@@ -57,6 +60,7 @@ var beforeRegion = region.layers.length;
   var l = sketch.find('#' + id, doc)[0];
   if (l) l.parent = region;
 });
+sourceStack.stackLayout?.apply();
 
 region.frame = {
   x: region.frame.x,

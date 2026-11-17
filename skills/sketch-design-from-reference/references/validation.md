@@ -86,7 +86,7 @@ If major deltas remain, keep iterating with targeted fixes (Step 7). Do not stop
 - Region structure matches the reference: same parent/sibling relationships where practical.
 - Top-level full-bleed vs in-column behavior is correct.
 - Text content is complete, verbatim where visible, and in reading order.
-- Shared styles/swatches match source tokens or sampled colors — not guessed grays and blues.
+- Shared styles and Color Variables match source tokens or sampled colors — not guessed grays and blues.
 - Repeated UI uses symbols/instances when appropriate.
 - Assets are real imported/exported assets, not placeholders, once geometry is stable.
 
@@ -107,10 +107,10 @@ If the Sketch output looks unlike the reference:
 
 In the final response, state:
 
-- Target frame/artboard name and ID.
+- Target Frame or Graphic name and ID.
 - Reference anchor width and source (URL, attachment, code preview).
 - Symbols used or created.
-- Tokens/swatches/shared styles used or created.
+- Tokens, Color Variables, and shared styles used or created.
 - Regions that passed the region gate.
 - Remaining major deltas (should be none) and minor deltas (listed honestly).
 - What was verified by side-by-side screenshot comparison vs what was only checked structurally.

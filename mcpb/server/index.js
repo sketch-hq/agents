@@ -10,7 +10,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 
 const SKETCH_MCP_URL = new URL("http://localhost:31126/mcp");
-const BRIDGE_VERSION = "3.0.0";
+const BRIDGE_VERSION = "3.0.1";
 const SKETCH_SERVER_NAME = "SketchMCP";
 const SKETCH_SERVER_VERSION = "2.0";
 const SKETCH_NOT_RUNNING_ERROR_MESSAGE =
@@ -20,10 +20,12 @@ const PLACEHOLDER_TOOL_DESCRIPTION_MESSAGE =
 const READONLY_ANNOTATIONS = {
   readOnlyHint: true,
   destructiveHint: false,
+  openWorldHint: false,
 };
 const DESTRUCTIVE_ANNOTATIONS = {
   readOnlyHint: false,
   destructiveHint: true,
+  openWorldHint: false,
 };
 const FALLBACK_TOOLS = [
   {
@@ -103,14 +105,14 @@ const FALLBACK_TOOLS = [
   {
     name: "get_screenshot",
     description:
-      "Generates a PNG screenshot of the requested Sketch layer. If no layer identifier is provided, takes a screenshot of the currently selected layer instead. Before using this tool, load `get_guide` topic `mcp` in context.",
+      "Generates a PNG screenshot of the requested Sketch layer. If no layer identifier is provided, takes a screenshot of the currently selected layer instead. Captures larger than 100 megapixels are refused, so target an individual frame or layer rather than a whole page when the page is large. Before using this tool, load `get_guide` topic `mcp` in context.",
     inputSchema: {
       type: "object",
       properties: {
         targetDocumentID: {
           type: "string",
           description:
-            "An identifier a document containing a layer to screenshot.",
+            "An identifier of a document containing a layer to screenshot.",
         },
         layerID: {
           type: "string",
@@ -151,7 +153,7 @@ const FALLBACK_TOOLS = [
         topic: {
           type: "string",
           description:
-            "(Optional) Guide topic to return. Supported topics: mcp, troubleshooting, use, layout, styling, symbols, assets, prototyping.",
+            "(Optional) Guide topic to return. Supported topics: mcp, troubleshooting, use, layout, organization, styling, symbols, assets, prototyping.",
         },
       },
       required: [],
@@ -161,7 +163,7 @@ const FALLBACK_TOOLS = [
   {
     name: "get_document_info",
     description:
-      "Returns basic information about an open Sketch document: file name, page names, layer counts, and top-level frames with position and dimensions.",
+      "Returns basic information about an open Sketch document: file name, page names, layer counts, top-level frames with position, dimensions, and an optional parent section, and sections with position, dimensions, and an optional parent section.",
     inputSchema: {
       type: "object",
       properties: {
@@ -178,7 +180,7 @@ const FALLBACK_TOOLS = [
   {
     name: "get_layer_tree_summary",
     description:
-      "Returns a compact indented text summary of a layer's subtree hierarchy, including type, name, ID, position, dimensions, text content, and stack layout hints.",
+      "Returns a compact indented text summary of a layer's subtree hierarchy, including type, name, ID, position, dimensions, text content, variants and stack layout hints.",
     inputSchema: {
       type: "object",
       properties: {

@@ -27,7 +27,7 @@ For non-web targets, compare simulator/emulator output when feasible. If not fea
 - Asset hygiene: referenced assets exist, no active asset is unused, and temporary screenshots/crops/export attempts are removed.
 - Responsiveness / constraints: pins, stacks, and resizing come from extracted data, not eyeballing. If relative layout metadata exists, verify the implementation follows it; otherwise verify parity at the frame viewport first and keep nearby viewport behavior flexible where practical.
 - Accessibility basics: labels, contrast, and focus order where applicable.
-- Tokens in code: swatches/shared styles map to the project theme, not stray hex values.
+- Tokens in code: Color Variables and shared styles map to the project theme, not stray hex values.
 - Component reuse: repeated symbol instances are represented by reusable components and data where appropriate.
 
 ## Mismatch recovery

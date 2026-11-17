@@ -15,14 +15,16 @@ For full symbol behavior, call `get_guide` with `topic: "symbols"`.
 After `get_symbol_overrides` returns the `commonOverrideIDPrefix` for the image-bearing inner layer, build override IDs by appending `_<property>`. This is more robust than matching `affectedLayer.name`, which can break when the master changes.
 
 ```javascript
-var inst = /* SymbolInstance */;
+const sketch = require('sketch');
+var instanceId = '<SYMBOL-INSTANCE-UUID>';
+var inst = sketch.find('#' + instanceId, sketch.getSelectedDocument())[0];
 var prefix = '<commonOverrideIDPrefix from get_symbol_overrides>';
 var byId = function (suffix) {
   return inst.overrides.find(function (o) { return o.id === prefix + '_' + suffix; });
 };
 
 var img = byId('image');
-if (img) img.value = { path: '/' + 'tmp' + '/' + 'asset.png' };
+if (img) img.value = { path: '/tmp/asset.png' };
 
 var resize = byId('imageResizeBehavior');
 if (resize) resize.value = 2;
@@ -33,6 +35,8 @@ console.log(JSON.stringify({
   setResize: !!resize,
 }));
 ```
+
+Image resize behavior `2` means Fit: the replacement image stays within the slot and preserves its aspect ratio.
 
 Fallback to name matching only when you cannot get a fresh `commonOverrideIDPrefix`, and screenshot afterwards.
 

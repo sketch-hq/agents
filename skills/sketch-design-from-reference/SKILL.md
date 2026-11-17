@@ -1,6 +1,6 @@
 ---
 name: sketch-design-from-reference
-description: Recreates or builds UI designs in Sketch from a reference URL, screenshot, or source code with side-by-side screenshot fidelity validation using Sketch MCP (`get_document_info`, `get_layer_tree_summary`, `get_screenshot`, `get_design_assets`, `get_symbol_overrides`, targeted `run_code`). Use when the user wants to design, mock up, or reproduce a page or screen in Sketch from the web, an image, or code.
+description: Recreates or builds UI designs in Sketch from a reference URL, screenshot, or source code with side-by-side screenshot fidelity validation using Sketch MCP (`get_guide`, `get_document_info`, `get_layer_tree_summary`, `get_screenshot`, `get_design_assets`, `get_symbol_overrides`, targeted `run_code`). Use when the user wants to design, mock up, or reproduce a page or screen in Sketch from the web, an image, or code.
 disable-model-invocation: false
 ---
 
@@ -16,13 +16,13 @@ The goal is visual parity with the reference — not a plausible page with simil
 
 - `get_guide` with `topic: "mcp"` — always; MCP prerequisites, `run_code` rules, failure handling, and visual verification.
 - `get_guide` with `topic: "use"` — Sketch editing, stacks, symbols, styles, overrides, assets, and prototyping.
-- `get_guide` with `topic: "layout"` — before creating or restructuring Frames, Groups, stacks, page placement, sizing, pins, or container types.
+- `get_guide` with `topic: "layout"` — before creating or restructuring Frames, Groups, stacks, sizing, pins, or container types.
+- `get_guide` with `topic: "organization"` — before placing new top-level Frames on a page, or working with pages or Sketch Sections (canvas groups of whole frames, not regions of a web page).
 
-Fetch guide subtopics on demand when the task needs them: `troubleshooting`, `layout`, `styling`, `symbols`, `assets`, and `prototyping`.
+Fetch guide subtopics on demand when the task needs them: `troubleshooting`, `styling`, `symbols`, `assets`, and `prototyping`.
 
 ## Prerequisites
 
-- Sketch running with MCP enabled (Settings → General → Allow AI tools to interact with open documents).
 - A target document is open, or the user expects you to create/use a new document.
 - A reference is available as a URL, screenshot, or source code.
 - Scope is clear enough to act: full page vs single frame, target width, dark/light mode, and target page/frame when the document has several candidates.
@@ -56,6 +56,8 @@ Inspect before mutating. Start with read-only MCP tools:
 
 Prefer editing an existing frame only when you are sure it maps to the requested design. Otherwise, create a new frame.
 
+Apply the tree-summary caveats from the required `use` guide; never treat an unexpanded or truncated node as empty.
+
 ### Step 3 — Plan structure before pixels
 
 Define the layer plan before drawing:
@@ -72,7 +74,7 @@ For every structured region, decide the Sketch stack model before drawing: direc
 
 ### Step 4 — Establish tokens and base frame
 
-Create or match document swatches/shared styles for background, border, text, brand, muted text, and important surfaces. Set the page/frame background intentionally and clear accidental fills from structural groups. For symbol details, call `get_guide` with `topic: "symbols"`.
+Create or match document Color Variables (`document.swatches`) and shared styles for background, border, text, brand, muted text, and important surfaces. Set the page/frame background intentionally and clear accidental fills from structural groups. For symbol details, call `get_guide` with `topic: "symbols"`.
 
 Use values from the reference: computed CSS, sampled screenshot colors, or code tokens. For styling details, call `get_guide` with `topic: "styling"`.
 
@@ -125,7 +127,7 @@ Do not claim done until completion criteria pass — see [references/validation.
 1. Capture a full-frame `get_screenshot` at the reference anchor width.
 2. Run the region gate for every band in the fidelity spec against the reference anchor screenshot.
 3. If any major delta remains, return to Step 7 and iterate. Do not hand off with "close enough" layouts.
-4. Summarize symbols used, tokens/styles created, target artboard/frame name and ID, regions verified, and any remaining minor deltas.
+4. Summarize symbols used, tokens/styles created, target Frame or Graphic name and ID, regions verified, and any remaining minor deltas.
 5. Do not run `zoomToFitCanvas` until the task is complete.
 
 ## Rules
@@ -165,6 +167,7 @@ For bridge/tool-call failures, parser errors, MCP connection problems, or screen
 For document-operation failures:
 
 - Layout/stack/order issues → `get_guide` with `topic: "layout"`.
+- Overlapping top-level frames, or page and Sketch Section placement → `get_guide` with `topic: "organization"`.
 - Symbol override issues → `get_guide` with `topic: "symbols"`.
 - Export/import/image issues → `get_guide` with `topic: "assets"`.
 
@@ -172,6 +175,7 @@ For document-operation failures:
 
 - Child count dropped after a script: tell the user to Undo, then inspect the operation. Do not repeat a bulk layer assignment.
 - `get_screenshot` is empty or wrong: re-resolve the frame/layer ID, then screenshot the page or parent frame if needed.
+- `get_screenshot` is refused as too large: move inward to a child frame instead — widening makes it worse → `get_guide` with `topic: "troubleshooting"`.
 - Symbol override has no effect: re-fetch `get_symbol_overrides`, rebuild the override ID from `commonOverrideIDPrefix + '_' + property`, then screenshot.
 - Text overlaps in a row stack: inspect child order and gap; fix one stack property or child index at a time.
 
@@ -179,7 +183,8 @@ For document-operation failures:
 
 - `get_guide` with `topic: "mcp"` — MCP tools, `run_code`, troubleshooting, visual verification, and completion rules
 - `get_guide` with `topic: "use"` — Sketch editing, stacks, symbols, styles, overrides, assets, and content verification
-- `get_guide` with `topic: "layout"` — stacks, page placement, sizing, pins, container types, reorder/reparent, and layout drift
+- `get_guide` with `topic: "layout"` — stacks, sizing, pins, container types, reorder/reparent, and layout drift
+- `get_guide` with `topic: "organization"` — pages, page placement of top-level frames, and Sketch Sections
 - [Reference extraction](references/reference-extraction.md)
 - [Safe editing patterns](references/editing-patterns.md)
 - [Symbol override patterns](references/symbols.md)

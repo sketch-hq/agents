@@ -1,6 +1,6 @@
 {
   "name": "sketch",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Integrate Sketch with your workflows. Includes the Sketch MCP server and skills to explore and organize documents, generate code from designs, create designs from code, and more.",
   "author": {
     "name": "Sketch B.V.",
@@ -15,6 +15,7 @@
   "homepage": "https://sketch.com",
   "logo": "./assets/icon.svg",
   "repository": "https://github.com/sketch-hq/agents",
+  "license": "Apache-2.0",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }
