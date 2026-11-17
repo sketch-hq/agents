@@ -9,6 +9,17 @@ Multi-agent plugin bundle for **Cursor**, **Codex**, **Claude Code**, **GitHub C
 
 ## Install the plugins
 
+### Cursor
+
+On a Teams or Enterprise plan, add this repository as a team marketplace:
+
+1. Open **Dashboard → Plugins & MCPs**.
+2. Under **Team Marketplaces**, select **Add Marketplace → Import from Repo** and enter `https://github.com/sketch-hq/agents`.
+3. Review the plugin and configure marketplace access. On Enterprise, an admin must add the marketplace.
+4. In Cursor, open **Customize** and install **Sketch** from the team marketplace.
+
+For other plans, use the manual MCP and skills setup below.
+
 ### Codex
 
 Add this repository as a Codex marketplace and install the plugin from there:
