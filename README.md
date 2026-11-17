@@ -1,24 +1,24 @@
-# Sketch agent plugin bundle
+# Sketch agent plugins
 
-Multi-agent plugin bundle for **Cursor**, **Codex**, **Claude Code**, **GitHub Copilot**, **Xcode**, and **Pi**. It includes the Claude MCPB connector package in `mcpb/`.
+Use Sketch with your favorite agents by connecting them to our local MCP server.
 
-> If your agent isn’t listed below, follow the manual MCP and skills setup instructions instead.
+Here you can find plugins for **Claude Code**, **Codex**, **Cursor**, **GitHub Copilot**, **Pi**, and **Xcode**.
+If your agent isn’t listed below, follow the manual MCP and skills setup instructions instead.
 
+Do you have feedback for us, or want to chat? Join us on our [Discord](https://discord.com/invite/ascPpfDSSV) community.
 
----
+## Install a plugin
 
-## Install the plugins
+### Claude Code
 
-### Cursor
+Add this repository as a Claude marketplace and install the plugin from there:
 
-On a Teams or Enterprise plan, add this repository as a team marketplace:
+```bash
+claude plugin marketplace add sketch-hq/agents
+claude plugin install sketch@sketch
+```
 
-1. Open **Dashboard → Plugins & MCPs**.
-2. Under **Team Marketplaces**, select **Add Marketplace → Import from Repo** and enter `https://github.com/sketch-hq/agents`.
-3. Review the plugin and configure marketplace access. On Enterprise, an admin must add the marketplace.
-4. In Cursor, open **Customize** and install **Sketch** from the team marketplace.
-
-For other plans, use the manual MCP and skills setup below.
+Run `/reload-plugins` in an active Claude Code session after installing, or start a new session.
 
 ### Codex
 
@@ -31,16 +31,21 @@ codex plugin add sketch@sketch
 
 Start a new Codex thread after installing. New threads pick up newly installed plugins, skills, and MCP tools.
 
-### Claude Code
+### Cursor
 
-Add this repository as a Claude marketplace and install the plugin from there:
+In the Cursor.app:
 
-```bash
-claude plugin marketplace add sketch-hq/agents
-claude plugin install sketch@sketch
+1. Open **Customize** in the sidebar.
+2. Select **Plugins**, then **+ Add**, and choose **From GitHub Repository**.
+3. Enter `https://github.com/sketch-hq/agents` and choose User or Team scope.
+
+To set up the MCP server separately, paste this link into your browser's address bar:
+
+```text
+cursor://anysphere.cursor-deeplink/mcp/install?name=sketch&config=eyJ1cmwiOiJodHRwOi8vbG9jYWxob3N0OjMxMTI2L21jcCJ9
 ```
 
-Run `/reload-plugins` in an active Claude Code session after installing, or start a new session.
+[Read more about installing Cursor plugins](https://cursor.com/docs/plugins#installing-plugins).
 
 ### GitHub Copilot
 
